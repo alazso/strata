@@ -1,0 +1,24 @@
+name: Strata
+version: "${version}"
+description: Shared library providing storage, utilities, and API for alazso plugins
+authors: [ alazso ]
+website: https://github.com/alazso/strata
+api-version: "26.1"
+folia-supported: true
+load: STARTUP
+main: so.alaz.strata.Strata
+loader: so.alaz.strata.StrataLoader
+
+# Optional integrations — soft dependencies so their API classes are visible when present,
+# but never required. Each hook guards usage with a class-presence check.
+dependencies:
+  server:
+    LuckPerms:
+      load: BEFORE
+      required: false
+    Vault:
+      load: BEFORE
+      required: false
+    PlaceholderAPI:
+      load: BEFORE
+      required: false

@@ -1,0 +1,22 @@
+rootProject.name = "strata"
+
+plugins {
+    // Auto-provisions the Java 25 toolchain when not installed locally.
+    // Applied with an explicit version: the `libs` catalog is not available in settings.
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        mavenCentral()
+        maven("https://repo.papermc.io/repository/maven-public/") { name = "papermc" }
+        maven("https://repo.extendedclip.com/content/repositories/placeholderapi/") { name = "placeholderapi" }
+        maven("https://jitpack.io") { name = "jitpack" }
+        maven("https://repo.faststats.dev/releases") { name = "faststats" }
+        maven("https://repo.alaz.so/releases")  { name = "alazso" }
+        maven("https://repo.alaz.so/snapshots") { name = "alazso-snapshots" }
+    }
+}
+
+include(":strata-api", ":strata-plugin")

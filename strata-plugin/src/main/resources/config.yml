@@ -1,0 +1,7 @@
+# Strata — shared library configuration.
+
+economy:
+  # When multiple economy backends are installed (e.g. Vault, Conduit), choose which one
+  # Strata's EconomyHook treats as authoritative. Match the provider name (case-insensitive):
+  # "Vault", "Conduit". Leave blank to auto-select the highest-priority available provider.
+  provider: ""

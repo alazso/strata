@@ -1,0 +1,54 @@
+[versions]
+kotlin          = "2.4.0"
+dokka           = "2.2.0"
+shadow          = "9.4.2"
+foojay          = "0.9.0"
+paper           = "26.1.2.build.66-stable"
+annotations     = "26.1.0"
+coroutines      = "1.11.0"
+exposed         = "1.3.0"
+hikari          = "7.0.2"
+sqlite          = "3.53.2.0"
+mariadb         = "3.5.8"
+luckperms       = "5.5"
+vault           = "1.7.1"
+bstats          = "3.1.0"
+faststats       = "0.25.1"  # BukkitContext API: token is the Factory(plugin, token) ctor arg
+placeholderapi  = "2.11.6"
+junit           = "5.11.4"
+assertj         = "3.26.3"
+mockk           = "1.14.11"
+
+[libraries]
+paper-api                = { module = "io.papermc.paper:paper-api",             version.ref = "paper" }
+jetbrains-annotations    = { module = "org.jetbrains:annotations",              version.ref = "annotations" }
+placeholderapi           = { module = "me.clip:placeholderapi",                 version.ref = "placeholderapi" }
+luckperms-api            = { module = "net.luckperms:api",                       version.ref = "luckperms" }
+vault-api                = { module = "com.github.MilkBowl:VaultAPI",             version.ref = "vault" }
+
+# Metrics — shaded + relocated into the plugin jar (not runtime-loaded).
+bstats-bukkit            = { module = "org.bstats:bstats-bukkit",                version.ref = "bstats" }
+faststats-bukkit         = { module = "dev.faststats.metrics:bukkit",            version.ref = "faststats" }
+
+# Runtime libraries — loaded by StrataLoader at startup, compileOnly here (never bundled).
+kotlin-stdlib            = { module = "org.jetbrains.kotlin:kotlin-stdlib",      version.ref = "kotlin" }
+coroutines-core          = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+exposed-core             = { module = "org.jetbrains.exposed:exposed-core",      version.ref = "exposed" }
+exposed-dao              = { module = "org.jetbrains.exposed:exposed-dao",       version.ref = "exposed" }
+exposed-jdbc             = { module = "org.jetbrains.exposed:exposed-jdbc",      version.ref = "exposed" }
+hikari                   = { module = "com.zaxxer:HikariCP",                     version.ref = "hikari" }
+sqlite-jdbc              = { module = "org.xerial:sqlite-jdbc",                  version.ref = "sqlite" }
+mariadb-jdbc             = { module = "org.mariadb.jdbc:mariadb-java-client",    version.ref = "mariadb" }
+
+# Test stack
+junit-jupiter            = { module = "org.junit.jupiter:junit-jupiter",        version.ref = "junit" }
+junit-platform-launcher  = { module = "org.junit.platform:junit-platform-launcher" }
+assertj-core             = { module = "org.assertj:assertj-core",               version.ref = "assertj" }
+mockk                    = { module = "io.mockk:mockk",                          version.ref = "mockk" }
+
+[plugins]
+kotlin-jvm    = { id = "org.jetbrains.kotlin.jvm",                    version.ref = "kotlin" }
+dokka         = { id = "org.jetbrains.dokka",                         version.ref = "dokka" }
+dokka-javadoc = { id = "org.jetbrains.dokka-javadoc",                 version.ref = "dokka" }
+shadow     = { id = "com.gradleup.shadow",                            version.ref = "shadow" }
+foojay     = { id = "org.gradle.toolchains.foojay-resolver-convention", version.ref = "foojay" }
