@@ -40,6 +40,7 @@ dependencies {
     compileOnly(libs.hikari)
     compileOnly(libs.sqlite.jdbc)
     compileOnly(libs.mariadb.jdbc)
+    compileOnly(libs.postgresql.jdbc)
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.assertj.core)

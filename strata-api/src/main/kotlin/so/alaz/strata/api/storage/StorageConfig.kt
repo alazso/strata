@@ -51,5 +51,19 @@ public class StorageConfig private constructor(
         ): StorageConfig = StorageConfig(
             Backend.MARIADB, "jdbc:mariadb://$host:$port/$database", username, password, maxPoolSize, poolName,
         )
+
+        @JvmStatic
+        @JvmOverloads
+        public fun postgres(
+            host: String,
+            port: Int,
+            database: String,
+            username: String,
+            password: String,
+            maxPoolSize: Int = 10,
+            poolName: String = "strata-postgres",
+        ): StorageConfig = StorageConfig(
+            Backend.POSTGRES, "jdbc:postgresql://$host:$port/$database", username, password, maxPoolSize, poolName,
+        )
     }
 }

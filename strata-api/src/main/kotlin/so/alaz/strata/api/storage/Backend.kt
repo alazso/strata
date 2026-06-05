@@ -8,4 +8,5 @@ public enum class Backend {
     SQLITE,
     MYSQL,
     MARIADB,
+    POSTGRES,
 }

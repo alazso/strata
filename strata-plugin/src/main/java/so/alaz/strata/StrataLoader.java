@@ -37,6 +37,7 @@ public class StrataLoader implements PluginLoader {
                 "com.zaxxer:HikariCP:7.0.2",
                 "org.xerial:sqlite-jdbc:3.53.2.0",
                 "org.mariadb.jdbc:mariadb-java-client:3.5.8",
+                "org.postgresql:postgresql:42.7.7",
         }) {
             resolver.addDependency(new Dependency(new DefaultArtifact(gav), null));
         }
