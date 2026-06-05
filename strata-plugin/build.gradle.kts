@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.shadow)
-    alias(libs.plugins.dokka)
-    alias(libs.plugins.dokka.javadoc)
     jacoco
 }
 
@@ -108,13 +106,6 @@ tasks.shadowJar {
 // The plain jar is replaced by the shadow jar (empty classifier); disable it.
 tasks.named<Jar>("jar") {
     enabled = false
-}
-
-// strata-plugin is Kotlin, so the stock `javadoc` task is empty. Build the javadoc jar from
-// Dokka's Javadoc-format output (mirrors strata-api).
-tasks.register<Jar>("javadocJar") {
-    archiveClassifier.set("javadoc")
-    from(tasks.named("dokkaGeneratePublicationJavadoc"))
 }
 
 tasks.named("assemble") {

@@ -62,7 +62,7 @@ jobs:
             exit 0
           fi
           ASSET_COUNT="$(gh release view "$TAG" --json assets -q '.assets | length')"
-          if [ "$ASSET_COUNT" -ge 6 ]; then
+          if [ "$ASSET_COUNT" -ge 4 ]; then
             echo "Release $TAG already has ${ASSET_COUNT} assets; skipping duplicate publish."
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else
@@ -87,7 +87,6 @@ jobs:
             :strata-api:build \
             :strata-plugin:build \
             :strata-api:javadocJar \
-            :strata-plugin:javadocJar \
             --no-configuration-cache \
             --stacktrace
 
@@ -113,13 +112,9 @@ jobs:
             "$STAGING/strata-${VERSION}.jar"
           cp "strata-api/build/libs/strata-api-${VERSION}.jar" \
             "$STAGING/strata-api-${VERSION}.jar"
-          cp "strata-plugin/build/libs/strata-plugin-${VERSION}-javadoc.jar" \
-            "$STAGING/strata-${VERSION}-javadoc.jar"
           cp "strata-api/build/libs/strata-api-${VERSION}-javadoc.jar" \
             "$STAGING/strata-api-${VERSION}-javadoc.jar"
 
-          (cd "strata-plugin/build/dokka/javadoc" && \
-            zip -rq "${GITHUB_WORKSPACE}/${STAGING}/strata-${VERSION}-javadoc.zip" .)
           (cd "strata-api/build/dokka/javadoc" && \
             zip -rq "${GITHUB_WORKSPACE}/${STAGING}/strata-api-${VERSION}-javadoc.zip" .)
 
@@ -155,9 +150,7 @@ jobs:
             echo "| --- | --- |"
             echo "| \`strata-${VERSION}.jar\` | Strata Paper/Folia plugin (install in /plugins) |"
             echo "| \`strata-api-${VERSION}.jar\` | Compile-time API library for dependent plugins |"
-            echo "| \`strata-${VERSION}-javadoc.jar\` | Javadoc JAR for the plugin module |"
-            echo "| \`strata-api-${VERSION}-javadoc.jar\` | Javadoc JAR for the API module |"
-            echo "| \`strata-${VERSION}-javadoc.zip\` | Browseable HTML Javadoc for the plugin |"
+            echo "| \`strata-api-${VERSION}-javadoc.jar\` | Javadoc JAR for the API |"
             echo "| \`strata-api-${VERSION}-javadoc.zip\` | Browseable HTML Javadoc for the API |"
           } > "$NOTES"
 
