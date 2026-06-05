@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.shadow)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.dokka.javadoc)
     jacoco
 }
 
@@ -87,12 +89,11 @@ tasks.withType<Jar>().configureEach {
     }
 }
 
-// The shadow jar is the server deliverable: strata-<version>-plugin.jar.
-// Only the API project is bundled; all heavy libs are runtime-loaded by StrataLoader,
-// so the jar stays small and ships no kotlin-stdlib.
+// The shadow jar is the server deliverable: strata-plugin-<version>.jar, renamed to
+// strata-<version>.jar at release. Only the API project is bundled; all heavy libs are
+// runtime-loaded by StrataLoader, so the jar stays small and ships no kotlin-stdlib.
 tasks.shadowJar {
-    archiveBaseName.set("strata")
-    archiveClassifier.set("plugin")
+    archiveClassifier.set("")
     dependencies {
         include(project(":strata-api"))
         include(dependency("org.bstats:.*"))
@@ -104,8 +105,16 @@ tasks.shadowJar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
+// The plain jar is replaced by the shadow jar (empty classifier); disable it.
 tasks.named<Jar>("jar") {
     enabled = false
+}
+
+// strata-plugin is Kotlin, so the stock `javadoc` task is empty. Build the javadoc jar from
+// Dokka's Javadoc-format output (mirrors strata-api).
+tasks.register<Jar>("javadocJar") {
+    archiveClassifier.set("javadoc")
+    from(tasks.named("dokkaGeneratePublicationJavadoc"))
 }
 
 tasks.named("assemble") {

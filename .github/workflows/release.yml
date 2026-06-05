@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -50,7 +50,7 @@ jobs:
           echo "version=${GRADLE_VERSION}" >> "$GITHUB_OUTPUT"
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
 
-      - name: Skip if release already fully published
+      - name: Skip if release already published
         id: published
         env:
           GH_TOKEN: ${{ github.token }}
@@ -62,8 +62,8 @@ jobs:
             exit 0
           fi
           ASSET_COUNT="$(gh release view "$TAG" --json assets -q '.assets | length')"
-          if [ "$ASSET_COUNT" -ge 1 ]; then
-            echo "Release $TAG already published; skipping."
+          if [ "$ASSET_COUNT" -ge 6 ]; then
+            echo "Release $TAG already has ${ASSET_COUNT} assets; skipping duplicate publish."
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"
@@ -71,18 +71,35 @@ jobs:
 
       - name: Set up JDK 25
         if: steps.published.outputs.skip != 'true'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "25"
 
       - name: Set up Gradle
         if: steps.published.outputs.skip != 'true'
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
 
-      - name: Build
+      - name: Build strata-api and strata-plugin
         if: steps.published.outputs.skip != 'true'
-        run: ./gradlew build --no-configuration-cache --stacktrace
+        run: |
+          ./gradlew \
+            :strata-api:build \
+            :strata-plugin:build \
+            :strata-api:javadocJar \
+            :strata-plugin:javadocJar \
+            --no-configuration-cache \
+            --stacktrace
+
+      - name: Publish strata-api to repo.alaz.so
+        if: steps.published.outputs.skip != 'true' && (github.event_name == 'push' || inputs.dry_run != true)
+        env:
+          ALAZSO_REPO_USER: ${{ secrets.ALAZSO_REPO_USER }}
+          ALAZSO_REPO_TOKEN: ${{ secrets.ALAZSO_REPO_TOKEN }}
+        run: |
+          ./gradlew :strata-api:publishLibraryPublicationToAlazsoRepository \
+            --no-configuration-cache \
+            --stacktrace
 
       - name: Stage release artifacts
         if: steps.published.outputs.skip != 'true'
@@ -91,14 +108,26 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           STAGING="release-artifacts"
           mkdir -p "$STAGING"
-          # The shadow JAR (classifier "plugin") is the server-side installable.
-          # Rename it to the plain name for server owners.
-          cp "strata-plugin/build/libs/strata-${VERSION}-plugin.jar" "$STAGING/strata-${VERSION}.jar"
+
+          cp "strata-plugin/build/libs/strata-plugin-${VERSION}.jar" \
+            "$STAGING/strata-${VERSION}.jar"
+          cp "strata-api/build/libs/strata-api-${VERSION}.jar" \
+            "$STAGING/strata-api-${VERSION}.jar"
+          cp "strata-plugin/build/libs/strata-plugin-${VERSION}-javadoc.jar" \
+            "$STAGING/strata-${VERSION}-javadoc.jar"
+          cp "strata-api/build/libs/strata-api-${VERSION}-javadoc.jar" \
+            "$STAGING/strata-api-${VERSION}-javadoc.jar"
+
+          (cd "strata-plugin/build/dokka/javadoc" && \
+            zip -rq "${GITHUB_WORKSPACE}/${STAGING}/strata-${VERSION}-javadoc.zip" .)
+          (cd "strata-api/build/dokka/javadoc" && \
+            zip -rq "${GITHUB_WORKSPACE}/${STAGING}/strata-api-${VERSION}-javadoc.zip" .)
+
           ls -lh "$STAGING"
 
-      - name: Upload artifact bundle
+      - name: Upload release artifact bundle
         if: steps.published.outputs.skip != 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-${{ steps.version.outputs.tag }}
           path: release-artifacts/*
@@ -113,19 +142,30 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           TAG="${{ steps.version.outputs.tag }}"
           STAGING="release-artifacts"
+          NOTES="${RUNNER_TEMP}/release-notes.md"
+
+          {
+            echo "## Strata ${VERSION}"
+            echo
+            echo "Version \`${VERSION}\` from \`gradle.properties\` (also injected into \`paper-plugin.yml\` at build time)."
+            echo
+            echo "### Artifacts"
+            echo
+            echo "| File | Description |"
+            echo "| --- | --- |"
+            echo "| \`strata-${VERSION}.jar\` | Strata Paper/Folia plugin (install in /plugins) |"
+            echo "| \`strata-api-${VERSION}.jar\` | Compile-time API library for dependent plugins |"
+            echo "| \`strata-${VERSION}-javadoc.jar\` | Javadoc JAR for the plugin module |"
+            echo "| \`strata-api-${VERSION}-javadoc.jar\` | Javadoc JAR for the API module |"
+            echo "| \`strata-${VERSION}-javadoc.zip\` | Browseable HTML Javadoc for the plugin |"
+            echo "| \`strata-api-${VERSION}-javadoc.zip\` | Browseable HTML Javadoc for the API |"
+          } > "$NOTES"
 
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" "$STAGING"/* --clobber
           else
             gh release create "$TAG" \
-              --title "v${VERSION}" \
-              --generate-notes \
+              --title "Strata ${VERSION}" \
+              --notes-file "$NOTES" \
               "$STAGING"/*
           fi
-
-      - name: Publish API JAR to repo.alaz.so
-        if: steps.published.outputs.skip != 'true' && (github.event_name == 'push' || inputs.dry_run != true)
-        env:
-          ALAZSO_REPO_USER: ${{ secrets.ALAZSO_REPO_USER }}
-          ALAZSO_REPO_TOKEN: ${{ secrets.ALAZSO_REPO_TOKEN }}
-        run: ./gradlew :strata-api:publishLibraryPublicationToAlazsoRepository --no-configuration-cache --stacktrace
