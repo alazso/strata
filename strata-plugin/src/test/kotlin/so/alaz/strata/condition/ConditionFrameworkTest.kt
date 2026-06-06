@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import net.kyori.adventure.text.Component
 import org.assertj.core.api.Assertions.assertThat
+import org.bukkit.Location
 import org.bukkit.Statistic
 import org.bukkit.World
 import org.bukkit.configuration.MemoryConfiguration
@@ -13,6 +14,7 @@ import so.alaz.strata.api.condition.Condition
 import so.alaz.strata.api.condition.ConditionContext
 import so.alaz.strata.api.condition.ConditionResult
 import so.alaz.strata.api.condition.Conditions
+import so.alaz.strata.api.hook.RegionHook
 import so.alaz.strata.hook.DefaultHookRegistry
 import so.alaz.strata.text.MiniMessageTextRenderer
 
@@ -105,6 +107,23 @@ class ConditionFrameworkTest {
 
         every { player.getStatistic(Statistic.MOB_KILLS) } returns 50
         assertThat(condition.test(ConditionContext.of(player)).passed).isFalse()
+    }
+
+    @Test
+    fun regionConditionMatchesCaseInsensitively() {
+        // WorldGuard ids are always lowercase; a capitalized region in config must still match.
+        val hooks = DefaultHookRegistry()
+        hooks.register(RegionHook::class.java, object : RegionHook {
+            override fun name() = "Fake"
+            override fun isAvailable() = true
+            override fun regionsAt(location: Location) = listOf("spawn")
+            override fun isInRegion(location: Location, regionId: String) = regionId.equals("spawn", true)
+            override fun canBuild(player: Player, location: Location) = true
+        }, 0)
+        val registry = DefaultConditionRegistry(hooks, MiniMessageTextRenderer())
+
+        val condition = registry.build(section("type" to "region", "regions" to listOf("Spawn")))!!
+        assertThat(condition.test(ConditionContext.of(mockk<Player>(relaxed = true))).passed).isTrue()
     }
 
     @Test

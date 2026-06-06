@@ -50,6 +50,8 @@ internal class RegionCondition(
         val regionHook = hooks.get(RegionHook::class.java)
             ?: return denied(context, "<red>Region support is unavailable.")
         val here = regionHook.regionsAt(context.location)
-        return if (here.any { it in regions }) pass() else denied(context, "<red>You're not in the required region.")
+        // Region ids are compared case-insensitively: WorldGuard lowercases ids, and the configured
+        // set is lowercased at construction (see DefaultConditionRegistry), mirroring RankCondition.
+        return if (here.any { it.lowercase() in regions }) pass() else denied(context, "<red>You're not in the required region.")
     }
 }

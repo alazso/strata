@@ -27,13 +27,13 @@ internal class MiniMessageTextRenderer : TextRenderer {
         isClassPresent("io.github.miniplaceholders.api.MiniPlaceholders")
 
     override fun render(input: String): Component =
-        mm.deserialize(applyPlaceholders(input, null), *miniPlaceholderResolvers())
+        deserialize(applyPlaceholders(input, null))
 
     override fun render(input: String, viewer: Player?): Component =
-        mm.deserialize(applyPlaceholders(input, viewer), *miniPlaceholderResolvers())
+        deserialize(applyPlaceholders(input, viewer))
 
     override fun render(input: String, viewer: Player?, vararg resolvers: TagResolver): Component =
-        mm.deserialize(applyPlaceholders(input, viewer), *(miniPlaceholderResolvers() + resolvers))
+        deserialize(applyPlaceholders(input, viewer), resolvers)
 
     override fun render(lines: List<String>, viewer: Player?): List<Component> =
         lines.map { render(it, viewer) }
@@ -41,15 +41,29 @@ internal class MiniMessageTextRenderer : TextRenderer {
     override fun resolve(input: String, viewer: Player?): String = applyPlaceholders(input, viewer)
 
     /**
+     * Parses [resolved] as MiniMessage with the caller's [callerResolvers] plus MiniPlaceholders'
+     * component-safe resolvers (when installed). Caller resolvers come **first** so an explicit
+     * per-call tag always wins over a same-named MiniPlaceholders expansion. If a MiniPlaceholders
+     * expansion throws during parsing, it falls back to parsing without the MiniPlaceholders
+     * resolvers, so a misbehaving provider can never break rendering. When MiniPlaceholders is
+     * absent the call is a plain `deserialize` and genuine MiniMessage errors surface unchanged.
+     */
+    private fun deserialize(resolved: String, callerResolvers: Array<out TagResolver> = emptyArray()): Component {
+        val miniPlaceholders = miniPlaceholderResolver() ?: return mm.deserialize(resolved, *callerResolvers)
+        return runCatching { mm.deserialize(resolved, *callerResolvers, miniPlaceholders) }
+            .getOrElse { mm.deserialize(resolved, *callerResolvers) }
+    }
+
+    /**
      * MiniPlaceholders' component-safe resolver covering both global and audience placeholders. The
      * audience for audience-scoped tags comes from the MiniMessage parse context, so global tags
      * resolve unconditionally and audience tags resolve where a target is present. Resolved fresh per
-     * render so expansions registered after Strata enables are picked up. Empty (and harmless) when
-     * MiniPlaceholders is not installed; wrapped so a misbehaving provider never breaks rendering.
+     * render so expansions registered after Strata enables are picked up. `null` (and harmless) when
+     * MiniPlaceholders is not installed or the provider misbehaves while building the resolver.
      */
-    private fun miniPlaceholderResolvers(): Array<TagResolver> {
-        if (!miniPlaceholdersAvailable) return emptyArray()
-        return runCatching { arrayOf(MiniPlaceholders.audienceGlobalPlaceholders()) }.getOrDefault(emptyArray())
+    private fun miniPlaceholderResolver(): TagResolver? {
+        if (!miniPlaceholdersAvailable) return null
+        return runCatching { MiniPlaceholders.audienceGlobalPlaceholders() }.getOrNull()
     }
 
     /** PAPI FIRST, then MiniMessage — the order is the whole point (CrazyCrates #878). */

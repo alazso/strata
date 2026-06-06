@@ -60,7 +60,7 @@ internal class DefaultConditionRegistry(
         register("owner") { s -> OwnerCondition(s.getString("deny"), text) }
         register("economy") { s -> EconomyCondition(s.getDouble("amount"), s.getString("deny"), text, hooks) }
         register("rank") { s -> RankCondition(s.getStringList("groups").map(String::lowercase).toSet(), s.getString("deny"), text, hooks) }
-        register("region") { s -> RegionCondition(s.getStringList("regions").toSet(), s.getString("deny"), text, hooks) }
+        register("region") { s -> RegionCondition(s.getStringList("regions").map(String::lowercase).toSet(), s.getString("deny"), text, hooks) }
         register("papi") { s ->
             PapiCondition(s.getString("placeholder").orEmpty(), s.getString("operator") ?: "equals", s.getString("value").orEmpty(), s.getString("deny"), text)
         }
