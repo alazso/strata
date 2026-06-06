@@ -10,6 +10,7 @@ import so.alaz.strata.api.condition.ConditionRegistry
 import so.alaz.strata.api.gui.GuiManager
 import so.alaz.strata.api.hook.EconomyHook
 import so.alaz.strata.api.hook.HookRegistry
+import so.alaz.strata.api.hook.ItemHook
 import so.alaz.strata.api.hook.PermissionHook
 import so.alaz.strata.api.metrics.MetricsService
 import so.alaz.strata.api.scheduler.PlatformScheduler
@@ -17,7 +18,10 @@ import so.alaz.strata.api.storage.StorageFactory
 import so.alaz.strata.api.text.TextRenderer
 import so.alaz.strata.hook.BukkitPermissionHook
 import so.alaz.strata.hook.DefaultHookRegistry
+import so.alaz.strata.hook.ItemsAdderItemHook
 import so.alaz.strata.hook.LuckPermsPermissionHook
+import so.alaz.strata.hook.NexoItemHook
+import so.alaz.strata.hook.OraxenItemHook
 import so.alaz.strata.hook.VaultEconomyHook
 import so.alaz.strata.condition.DefaultConditionRegistry
 import so.alaz.strata.gui.DefaultGuiManager
@@ -42,6 +46,11 @@ class Strata : JavaPlugin(), StrataProvider {
             register(PermissionHook::class.java, BukkitPermissionHook(), 0)
             register(PermissionHook::class.java, LuckPermsPermissionHook(), 100)
             register(EconomyHook::class.java, VaultEconomyHook(), 0)
+            // Custom-item providers. None shadows another: items are provider-specific, so consumers
+            // resolve across all available providers via hooks().all(ItemHook::class.java).
+            register(ItemHook::class.java, ItemsAdderItemHook(), 0)
+            register(ItemHook::class.java, OraxenItemHook(), 0)
+            register(ItemHook::class.java, NexoItemHook(), 0)
         }
     }
     private val metricsService: MetricsService by lazy { DefaultMetricsService() }

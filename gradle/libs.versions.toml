@@ -13,6 +13,9 @@ mariadb         = "3.5.8"
 postgresql      = "42.7.7"
 luckperms       = "5.5"
 vault           = "1.7.1"
+itemsadder      = "3.6.3-beta-14"
+oraxen          = "1.216.0"
+nexo            = "1.24.0"
 bstats          = "3.1.0"
 faststats       = "0.25.1"  # BukkitContext API: token is the Factory(plugin, token) ctor arg
 placeholderapi  = "2.11.6"
@@ -26,6 +29,11 @@ jetbrains-annotations    = { module = "org.jetbrains:annotations",              
 placeholderapi           = { module = "me.clip:placeholderapi",                 version.ref = "placeholderapi" }
 luckperms-api            = { module = "net.luckperms:api",                       version.ref = "luckperms" }
 vault-api                = { module = "com.github.MilkBowl:VaultAPI",             version.ref = "vault" }
+
+# Custom-item providers — soft dependencies, compileOnly (guarded by class-presence checks).
+itemsadder-api           = { module = "com.github.LoneDev6:api-itemsadder",       version.ref = "itemsadder" }
+oraxen                   = { module = "io.th0rgal:oraxen",                         version.ref = "oraxen" }
+nexo                     = { module = "com.nexomc:nexo",                           version.ref = "nexo" }
 
 # Metrics — shaded + relocated into the plugin jar (not runtime-loaded).
 bstats-bukkit            = { module = "org.bstats:bstats-bukkit",                version.ref = "bstats" }

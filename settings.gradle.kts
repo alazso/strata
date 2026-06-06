@@ -14,6 +14,8 @@ dependencyResolutionManagement {
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/") { name = "placeholderapi" }
         maven("https://jitpack.io") { name = "jitpack" }
         maven("https://repo.faststats.dev/releases") { name = "faststats" }
+        maven("https://repo.oraxen.com/releases") { name = "oraxen" }
+        maven("https://repo.nexomc.com/releases") { name = "nexo" }
         maven("https://repo.alaz.so/releases")  { name = "alazso" }
         maven("https://repo.alaz.so/snapshots") { name = "alazso-snapshots" }
     }

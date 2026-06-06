@@ -12,6 +12,15 @@ java {
     }
 }
 
+kotlin {
+    compilerOptions {
+        // Nexo's API is compiled with a newer Kotlin than ours and is flagged pre-release. This
+        // module is the final shaded plugin (nothing compiles against it), so skipping the check
+        // is safe; it only affects compile-time consumption, never runtime class loading.
+        freeCompilerArgs.add("-Xskip-prerelease-check")
+    }
+}
+
 dependencies {
     // The API surface — bundled into the plugin jar (see shadowJar whitelist below).
     implementation(project(":strata-api"))
@@ -29,6 +38,11 @@ dependencies {
     compileOnly(libs.luckperms.api)
     // VaultAPI: only the Economy interface is needed; drop its transitive (old Bukkit) deps.
     compileOnly(libs.vault.api) { isTransitive = false }
+    // Custom-item providers — only their item APIs are referenced (in guarded method bodies);
+    // drop the heavy transitive plugin trees so they stay compile-time only.
+    compileOnly(libs.itemsadder.api) { isTransitive = false }
+    compileOnly(libs.oraxen) { isTransitive = false }
+    compileOnly(libs.nexo) { isTransitive = false }
 
     // Runtime libraries — fetched by StrataLoader at startup, so compileOnly here:
     // compiled against, but NEVER bundled into the jar.
