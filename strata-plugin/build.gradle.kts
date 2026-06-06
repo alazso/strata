@@ -49,6 +49,8 @@ dependencies {
     compileOnly(libs.worldguard.core) { isTransitive = false }
     compileOnly(libs.worldedit.bukkit) { isTransitive = false }
     compileOnly(libs.worldedit.core) { isTransitive = false }
+    // MiniPlaceholders API — its Adventure deps are provided by Paper at runtime.
+    compileOnly(libs.miniplaceholders.api) { isTransitive = false }
 
     // Runtime libraries — fetched by StrataLoader at startup, so compileOnly here:
     // compiled against, but NEVER bundled into the jar.
