@@ -16,6 +16,8 @@ vault           = "1.7.1"
 itemsadder      = "3.6.3-beta-14"
 oraxen          = "1.216.0"
 nexo            = "1.24.0"
+worldguard      = "7.0.17"
+worldedit       = "7.3.18"  # the WorldEdit version WorldGuard 7.0.17 is built against
 bstats          = "3.1.0"
 faststats       = "0.25.1"  # BukkitContext API: token is the Factory(plugin, token) ctor arg
 placeholderapi  = "2.11.6"
@@ -34,6 +36,14 @@ vault-api                = { module = "com.github.MilkBowl:VaultAPI",           
 itemsadder-api           = { module = "com.github.LoneDev6:api-itemsadder",       version.ref = "itemsadder" }
 oraxen                   = { module = "io.th0rgal:oraxen",                         version.ref = "oraxen" }
 nexo                     = { module = "com.nexomc:nexo",                           version.ref = "nexo" }
+
+# Region provider — soft dependency, compileOnly. Declared non-transitively (see build script) to
+# avoid WorldGuard's strict Gson constraint clashing with Paper/FastStats; hence the explicit
+# worldedit modules that supply BukkitAdapter and the geometry types.
+worldguard-bukkit        = { module = "com.sk89q.worldguard:worldguard-bukkit",    version.ref = "worldguard" }
+worldguard-core          = { module = "com.sk89q.worldguard:worldguard-core",      version.ref = "worldguard" }
+worldedit-bukkit         = { module = "com.sk89q.worldedit:worldedit-bukkit",      version.ref = "worldedit" }
+worldedit-core           = { module = "com.sk89q.worldedit:worldedit-core",        version.ref = "worldedit" }
 
 # Metrics — shaded + relocated into the plugin jar (not runtime-loaded).
 bstats-bukkit            = { module = "org.bstats:bstats-bukkit",                version.ref = "bstats" }

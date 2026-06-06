@@ -43,6 +43,12 @@ dependencies {
     compileOnly(libs.itemsadder.api) { isTransitive = false }
     compileOnly(libs.oraxen) { isTransitive = false }
     compileOnly(libs.nexo) { isTransitive = false }
+    // WorldGuard + WorldEdit, declared non-transitively so WorldGuard's strict Gson constraint never
+    // enters the graph. compileOnly, so none of it is bundled.
+    compileOnly(libs.worldguard.bukkit) { isTransitive = false }
+    compileOnly(libs.worldguard.core) { isTransitive = false }
+    compileOnly(libs.worldedit.bukkit) { isTransitive = false }
+    compileOnly(libs.worldedit.core) { isTransitive = false }
 
     // Runtime libraries — fetched by StrataLoader at startup, so compileOnly here:
     // compiled against, but NEVER bundled into the jar.

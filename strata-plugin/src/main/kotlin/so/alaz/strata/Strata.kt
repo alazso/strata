@@ -12,6 +12,7 @@ import so.alaz.strata.api.hook.EconomyHook
 import so.alaz.strata.api.hook.HookRegistry
 import so.alaz.strata.api.hook.ItemHook
 import so.alaz.strata.api.hook.PermissionHook
+import so.alaz.strata.api.hook.RegionHook
 import so.alaz.strata.api.metrics.MetricsService
 import so.alaz.strata.api.scheduler.PlatformScheduler
 import so.alaz.strata.api.storage.StorageFactory
@@ -23,6 +24,7 @@ import so.alaz.strata.hook.LuckPermsPermissionHook
 import so.alaz.strata.hook.NexoItemHook
 import so.alaz.strata.hook.OraxenItemHook
 import so.alaz.strata.hook.VaultEconomyHook
+import so.alaz.strata.hook.WorldGuardRegionHook
 import so.alaz.strata.condition.DefaultConditionRegistry
 import so.alaz.strata.gui.DefaultGuiManager
 import so.alaz.strata.gui.GuiListener
@@ -51,6 +53,7 @@ class Strata : JavaPlugin(), StrataProvider {
             register(ItemHook::class.java, ItemsAdderItemHook(), 0)
             register(ItemHook::class.java, OraxenItemHook(), 0)
             register(ItemHook::class.java, NexoItemHook(), 0)
+            register(RegionHook::class.java, WorldGuardRegionHook(), 0)
         }
     }
     private val metricsService: MetricsService by lazy { DefaultMetricsService() }
