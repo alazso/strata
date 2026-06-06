@@ -25,8 +25,10 @@ public class StrataLoader implements PluginLoader {
     @Override
     public void classloader(@NotNull PluginClasspathBuilder classpath) {
         MavenLibraryResolver resolver = new MavenLibraryResolver();
+        // Paper forbids resolving directly against Maven Central (its ToS bars CDN use) and throws
+        // on load if you try. Use Paper's bundled Maven Central mirror instead.
         resolver.addRepository(new RemoteRepository.Builder(
-                "central", "default", "https://repo1.maven.org/maven2/").build());
+                "central", "default", MavenLibraryResolver.MAVEN_CENTRAL_DEFAULT_MIRROR).build());
 
         for (String gav : new String[]{
                 "org.jetbrains.kotlin:kotlin-stdlib:2.4.0",
