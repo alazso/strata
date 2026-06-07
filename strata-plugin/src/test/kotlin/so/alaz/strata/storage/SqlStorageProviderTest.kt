@@ -71,6 +71,30 @@ class SqlStorageProviderTest {
     }
 
     @Test
+    fun digitLeadingNamespaceProducesValidIdentifier(@TempDir dir: Path) {
+        // A namespace starting with a digit must be prefixed so the table name is valid on MySQL/Postgres.
+        val provider = SqlStorageProvider(
+            StorageConfig.sqlite(dir.resolve("d.db").toString()).withNamespace("7days"),
+        )
+        provider.init().get()
+        try {
+            provider.migrations().migrate().get()
+            provider.dataSource().connection.use { conn ->
+                val tables = buildList {
+                    conn.createStatement().use { st ->
+                        st.executeQuery("SELECT name FROM sqlite_master WHERE type='table'").use { rs ->
+                            while (rs.next()) add(rs.getString(1))
+                        }
+                    }
+                }
+                assertThat(tables).contains("_7days_schema_version")
+            }
+        } finally {
+            provider.shutdown().get()
+        }
+    }
+
+    @Test
     fun secondMigrationAppliesOnlyTheNewOne(@TempDir dir: Path) {
         val provider = SqlStorageProvider(StorageConfig.sqlite(dir.resolve("data2.db").toString()))
         provider.init().get()

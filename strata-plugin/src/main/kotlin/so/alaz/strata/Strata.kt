@@ -106,6 +106,7 @@ class Strata : JavaPlugin(), StrataProvider {
 
     override fun onDisable() {
         guiManager.closeAll()
+        playerLookup.shutdown()
         StrataApi.unregister()
         schedulers.clear()
         logger.info("Strata disabled.")

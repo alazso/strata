@@ -56,12 +56,17 @@ internal class DefaultMessageService(
         val defaults = codeDefaults[locale] ?: emptyMap()
         val file = File(langDir, "${fileName(locale)}.yml")
         val yaml = YamlConfiguration()
+        var loadFailed = false
         if (file.exists()) {
             runCatching { yaml.load(file) }.onFailure {
-                plugin.logger.warning("Could not read lang file ${file.name}: ${it.message}. Using defaults.")
+                loadFailed = true
+                plugin.logger.warning(
+                    "Could not read lang file ${file.name}: ${it.message}. Using defaults; leaving the file untouched so you can fix it.",
+                )
             }
         }
         // Write-back: create the file from defaults, and append any default keys not already present.
+        // Never write when an existing file failed to parse, or we would clobber the admin's content.
         var changed = !file.exists()
         for ((key, value) in defaults) {
             if (!yaml.isSet(key)) {
@@ -69,7 +74,7 @@ internal class DefaultMessageService(
                 changed = true
             }
         }
-        if (changed) {
+        if (changed && !loadFailed) {
             runCatching {
                 langDir.mkdirs()
                 yaml.save(file)

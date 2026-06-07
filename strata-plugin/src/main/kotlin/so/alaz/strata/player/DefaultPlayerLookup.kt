@@ -27,6 +27,10 @@ internal class DefaultPlayerLookup : PlayerLookup, Listener {
     private val uuidToName = ConcurrentHashMap<UUID, String>()
     private val nameToUuid = ConcurrentHashMap<String, UUID>()
 
+    // In-flight async lookups, so concurrent identical requests share one Mojang call.
+    private val pendingUuid = ConcurrentHashMap<String, CompletableFuture<UUID?>>()
+    private val pendingName = ConcurrentHashMap<UUID, CompletableFuture<String?>>()
+
     @EventHandler(priority = EventPriority.MONITOR)
     public fun onJoin(event: PlayerJoinEvent) {
         cache(event.player.uniqueId, event.player.name)
@@ -46,30 +50,43 @@ internal class DefaultPlayerLookup : PlayerLookup, Listener {
             cache(id, name)
             return CompletableFuture.completedFuture(id)
         }
-        return CompletableFuture.supplyAsync({
-            runCatching {
-                val profile = Bukkit.createProfile(name)
-                profile.complete(false)
-                profile.id?.also { id -> profile.name?.let { resolved -> cache(id, resolved) } }
-            }.getOrNull()
-        }, executor)
+        val key = name.lowercase(Locale.ROOT)
+        return pendingUuid.computeIfAbsent(key) {
+            CompletableFuture.supplyAsync({
+                runCatching {
+                    val profile = Bukkit.createProfile(name)
+                    profile.complete(false)
+                    profile.id?.also { id -> profile.name?.let { resolved -> cache(id, resolved) } }
+                }.getOrNull()
+            }, executor).whenComplete { _, _ -> pendingUuid.remove(key) }
+        }
     }
 
     override fun name(uuid: UUID): CompletableFuture<String?> {
         cachedName(uuid)?.let { return CompletableFuture.completedFuture(it) }
-        return CompletableFuture.supplyAsync({
-            runCatching {
-                val profile = Bukkit.createProfile(uuid)
-                profile.complete(false)
-                profile.name?.also { resolved -> cache(uuid, resolved) }
-            }.getOrNull()
-        }, executor)
+        return pendingName.computeIfAbsent(uuid) {
+            CompletableFuture.supplyAsync({
+                runCatching {
+                    // Local usercache first (no network); only fall through to Mojang if unknown.
+                    Bukkit.getOfflinePlayer(uuid).name?.takeIf { it.isNotBlank() }
+                        ?.also { cache(uuid, it) }
+                        ?: Bukkit.createProfile(uuid)
+                            .also { it.complete(false) }
+                            .name?.also { resolved -> cache(uuid, resolved) }
+                }.getOrNull()
+            }, executor).whenComplete { _, _ -> pendingName.remove(uuid) }
+        }
     }
 
     override fun hasPlayedBefore(uuid: UUID): CompletableFuture<Boolean> =
         CompletableFuture.supplyAsync({
             runCatching { Bukkit.getOfflinePlayer(uuid).hasPlayedBefore() }.getOrDefault(false)
         }, executor)
+
+    /** Stops the lookup pool. Called by the plugin on disable so reloads do not leak threads. */
+    fun shutdown() {
+        executor.shutdownNow()
+    }
 
     private fun cache(uuid: UUID, name: String) {
         uuidToName[uuid] = name

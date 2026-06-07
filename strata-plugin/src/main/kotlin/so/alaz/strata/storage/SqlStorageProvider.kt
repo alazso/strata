@@ -73,8 +73,14 @@ internal class SqlStorageProvider(private val config: StorageConfig) : StoragePr
         pdStores.computeIfAbsent(name) { JdbcPlayerDataStore(this, executor, "${namespace}_pd_${sanitize(it)}") }
 
     internal companion object {
-        /** Lowercases and reduces an identifier to `[a-z0-9_]` so it is safe to splice into DDL. */
-        fun sanitize(identifier: String): String =
-            identifier.lowercase().replace(Regex("[^a-z0-9_]"), "_").ifEmpty { "strata" }
+        /**
+         * Lowercases and reduces an identifier to `[a-z0-9_]` so it is safe to splice into DDL, and
+         * guarantees a non-digit first character (MySQL/PostgreSQL reject unquoted identifiers that
+         * start with a digit).
+         */
+        fun sanitize(identifier: String): String {
+            val cleaned = identifier.lowercase().replace(Regex("[^a-z0-9_]"), "_").ifEmpty { "strata" }
+            return if (cleaned.first().isDigit()) "_$cleaned" else cleaned
+        }
     }
 }

@@ -30,7 +30,13 @@ internal class HeadDatabaseItemHook : ItemHook {
         runCatching { HeadDatabaseAPI().getItemID(item)?.let { "hdb:$it" } }.getOrNull()
 
     override fun createItem(id: String): ItemStack? =
-        runCatching { HeadDatabaseAPI().getItemHead(headId(id)) }.getOrNull()
+        runCatching {
+            val head = headId(id)
+            val api = HeadDatabaseAPI()
+            // Verify the id belongs to HDB first, so an unknown or foreign id returns null rather
+            // than a placeholder head that would hijack cross-provider item resolution.
+            if (api.isHead(head)) api.getItemHead(head) else null
+        }.getOrNull()
 
     override fun isCustomItem(item: ItemStack): Boolean = itemId(item) != null
 

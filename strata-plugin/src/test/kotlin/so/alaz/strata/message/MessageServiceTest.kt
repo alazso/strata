@@ -76,4 +76,17 @@ class MessageServiceTest {
         val messages = service(dir).defaults(mapOf("a" to "b")).load()
         assertThat(messages.raw(Locale.ENGLISH, "nope")).isEqualTo("missing message: nope")
     }
+
+    @Test
+    fun malformedLangFileIsNotOverwritten(@TempDir dir: Path) {
+        File(dir.toFile(), "lang").mkdirs()
+        val file = File(dir.toFile(), "lang/en.yml")
+        val broken = "items: [a, b\nwelcome: \"<green>Hi\"\n" // unterminated flow sequence
+        file.writeText(broken)
+
+        val messages = service(dir).defaults(mapOf("welcome" to "<green>Hi", "newkey" to "x")).load()
+
+        assertThat(file.readText()).isEqualTo(broken) // file left intact for the admin to fix
+        assertThat(messages.raw(Locale.ENGLISH, "welcome")).isEqualTo("<green>Hi") // defaults still work
+    }
 }
