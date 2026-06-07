@@ -13,6 +13,7 @@ import so.alaz.strata.api.hook.HookRegistry
 import so.alaz.strata.api.hook.ItemHook
 import so.alaz.strata.api.hook.PermissionHook
 import so.alaz.strata.api.hook.RegionHook
+import so.alaz.strata.api.message.MessageService
 import so.alaz.strata.api.metrics.MetricsService
 import so.alaz.strata.api.player.PlayerLookup
 import so.alaz.strata.api.scheduler.PlatformScheduler
@@ -30,6 +31,7 @@ import so.alaz.strata.hook.WorldGuardRegionHook
 import so.alaz.strata.condition.DefaultConditionRegistry
 import so.alaz.strata.gui.DefaultGuiManager
 import so.alaz.strata.gui.GuiListener
+import so.alaz.strata.message.DefaultMessageService
 import so.alaz.strata.metrics.DefaultMetricsService
 import so.alaz.strata.player.DefaultPlayerLookup
 import so.alaz.strata.scheduler.FoliaPlatformScheduler
@@ -66,6 +68,7 @@ class Strata : JavaPlugin(), StrataProvider {
     }
     private val guiManager: DefaultGuiManager by lazy { DefaultGuiManager(this) }
     private val playerLookup: DefaultPlayerLookup by lazy { DefaultPlayerLookup() }
+    private val messageServices = ConcurrentHashMap<Plugin, MessageService>()
 
     override fun onEnable() {
         instance = this
@@ -124,6 +127,9 @@ class Strata : JavaPlugin(), StrataProvider {
     override fun gui(): GuiManager = guiManager
 
     override fun players(): PlayerLookup = playerLookup
+
+    override fun messages(plugin: Plugin): MessageService =
+        messageServices.computeIfAbsent(plugin) { DefaultMessageService(it, textRenderer) }
 
     companion object {
         @JvmStatic

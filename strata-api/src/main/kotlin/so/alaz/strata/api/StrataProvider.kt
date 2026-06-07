@@ -5,6 +5,7 @@ import org.jetbrains.annotations.ApiStatus
 import so.alaz.strata.api.condition.ConditionRegistry
 import so.alaz.strata.api.gui.GuiManager
 import so.alaz.strata.api.hook.HookRegistry
+import so.alaz.strata.api.message.MessageService
 import so.alaz.strata.api.metrics.MetricsService
 import so.alaz.strata.api.player.PlayerLookup
 import so.alaz.strata.api.scheduler.PlatformScheduler
@@ -41,4 +42,7 @@ public interface StrataProvider {
 
     /** The shared player name/UUID lookup. */
     public fun players(): PlayerLookup
+
+    /** The message catalog bound to [plugin] (cached per plugin). */
+    public fun messages(plugin: Plugin): MessageService
 }

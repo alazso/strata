@@ -5,6 +5,7 @@ import org.jetbrains.annotations.ApiStatus
 import so.alaz.strata.api.condition.ConditionRegistry
 import so.alaz.strata.api.gui.GuiManager
 import so.alaz.strata.api.hook.HookRegistry
+import so.alaz.strata.api.message.MessageService
 import so.alaz.strata.api.metrics.MetricsService
 import so.alaz.strata.api.player.PlayerLookup
 import so.alaz.strata.api.scheduler.PlatformScheduler
@@ -65,6 +66,10 @@ public object StrataApi {
     /** The shared [PlayerLookup] for resolving player names and UUIDs. */
     @JvmStatic
     public fun players(): PlayerLookup = require().players()
+
+    /** The [MessageService] (keyed, localized messages) bound to [plugin]; cached per plugin. */
+    @JvmStatic
+    public fun messages(plugin: Plugin): MessageService = require().messages(plugin)
 
     private fun require(): StrataProvider = provider ?: error(
         "Strata is not enabled yet. Declare a hard 'Strata' dependency (load: BEFORE) in paper-plugin.yml.",
