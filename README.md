@@ -1,32 +1,52 @@
-# Strata
+<div align="center">
 
-A shared library plugin for Paper and Folia. Strata gives the plugins in one
-ecosystem a single, tested set of building blocks (scheduling, storage,
-integrations, conditions, GUIs, commands, and metrics) instead of each plugin
-re-implementing them.
+# 🧱 Strata
 
-It is installed once on the server, the same way as Vault or LuckPerms, and your
-plugins depend on it. Shared, stateful services such as the connection pool and
-the integration registry therefore live in one place rather than in a separate
-copy inside every plugin.
+#### Shared library foundation for Paper, Folia, and Purpur plugins
 
-Full documentation lives at <https://alaz.so/strata>.
+[![Build](https://img.shields.io/github/actions/workflow/status/alazso/strata/ci.yml?branch=main&style=for-the-badge&label=build)](https://github.com/alazso/strata/actions)
+[![Downloads](https://img.shields.io/modrinth/dt/strata-api?style=for-the-badge&logo=modrinth&label=downloads)](https://modrinth.com/plugin/strata-api)
+[![Minecraft](https://img.shields.io/badge/Paper%20·%20Folia%20·%20Purpur-26.1%2B-2b2d31?style=for-the-badge)](https://papermc.io/)
+[![License](https://img.shields.io/github/license/alazso/strata?style=for-the-badge&label=license)](LICENSE)
 
-## Using Strata
+**[📖 Documentation](https://alaz.so/strata/docs)**  ·  **[💻 Source](https://github.com/alazso/strata)**
 
-Add the Maven repository and the API artifact (compile-time only):
+</div>
+
+<br>
+
+> ⚠️ &nbsp; **Strata is a shared library, not a standalone plugin.** Install it once on the server (like Vault or LuckPerms) because a plugin depends on it; on its own it does nothing. It is currently under review on Modrinth, so for now grab it from [GitHub releases](https://github.com/alazso/strata/releases).
+
+<br>
+
+One tested set of building blocks for a whole plugin ecosystem: scheduling, storage, integrations, conditions, text, and more. Install Strata once and every plugin built on it shares the same connection pool, integration registry, and runtime libraries instead of each shipping its own.
+
+<br>
+
+## Features
+
+|   |   |
+|---|---|
+| 🗓️ **Folia-safe scheduler** | One scheduling API over region, global, async, and entity threads. |
+| 💬 **Text and messages** | MiniMessage with PlaceholderAPI and MiniPlaceholders, plus a localized message catalog. |
+| 🗄️ **Storage** | Pooled SQLite, MySQL, MariaDB, and PostgreSQL with migrations and key-value stores. |
+| 🔌 **Integrations** | Permissions, economy, regions, and custom items behind one degrade-gracefully registry. |
+| 🎚️ **Conditions** | Config-driven predicates: permission, world, region, economy, rank, and more. |
+| 🖼️ **GUIs** | Holder-based chest menus, pagination, and anvil and chat input. |
+| 🧰 **Utilities** | Player lookup, item serialization, skull builder, PDC keys, config schema, cooldowns. |
+| 🪶 **Folia-ready** | Off-thread storage and region-safe scheduling throughout. |
+
+<br>
+
+## 🚀 Using it
+
+Install `strata-<version>.jar` in `plugins/`, then build against the API:
 
 ```kotlin
-repositories {
-    maven("https://repo.alaz.so/releases") { name = "alazso" }
-}
-
-dependencies {
-    compileOnly("so.alaz.strata:strata-api:<version>")
-}
+// build.gradle.kts
+repositories { maven("https://repo.alaz.so/releases") }
+dependencies { compileOnly("so.alaz.strata:strata-api:0.9.0") }
 ```
-
-Declare Strata as a required dependency that loads first:
 
 ```yaml
 # paper-plugin.yml
@@ -40,45 +60,35 @@ dependencies:
 Then reach everything through `StrataApi`:
 
 ```java
-StrataApi.scheduler(this).async(() -> doWork());            // Folia-safe scheduling
-EconomyHook eco = StrataApi.hooks().get(EconomyHook.class); // null if no economy plugin is present
+StrataApi.scheduler(this).async(() -> doWork());             // Folia-safe scheduling
+StrataApi.messages(this).send(player, "welcome");            // localized messages
+EconomyHook eco = StrataApi.hooks().get(EconomyHook.class);  // null if none installed
 ```
 
-Your plugin ships no Kotlin standard library of its own; it is provided at
-runtime by Strata.
+Your plugin ships no Kotlin runtime of its own; Strata provides it at runtime. The **[documentation](https://alaz.so/strata/docs)** covers every service with examples.
 
-## What it provides
+<br>
 
-- Scheduler: a Folia-safe wrapper over the Region, Global, Async, and Entity schedulers
-- Text: MiniMessage and PlaceholderAPI rendering in the correct resolution order
-- Storage: pooled SQLite/MySQL with a migration runner, plus an Exposed/coroutines layer
-- PDC helpers, config-schema validation, and keyed cooldowns
-- Hooks: permissions, economy, regions, items, and holograms behind one registry
-- Metrics: bStats and FastStats with error tracking and feature flags
-- Conditions: config-driven predicates (permission, economy, region, and more)
-- GUI: holder-identified chest menus, pagination, and anvil/chat input
-- Commands: a fluent Brigadier builder with common and debug subcommands
+## 📦 Requirements
 
-## Building
+|   |   |
+|---|---|
+| **Server** | Paper, Folia, or Purpur |
+| **Minecraft** | 26.1 or newer |
+| **Java** | 25 |
 
-Requires JDK 25. Use the Gradle wrapper:
+<br>
 
-```bash
-./gradlew build                       # compile, test, and build both artifacts
-./gradlew :strata-plugin:shadowJar    # the server plugin jar only
-```
+## 🗺️ Roadmap
 
-The build produces two artifacts:
+* Hologram provider implementations
+* Scoreboard and bossbar helpers
+* Placeholder expansion registration
 
-- `strata-<version>.jar` (from `:strata-plugin`): the server plugin, installed in `/plugins`
-- `strata-api-<version>.jar` (from `:strata-api`): the compile-time API, published to repo.alaz.so
+<br>
 
-Heavy runtime libraries (Kotlin stdlib, coroutines, Exposed, HikariCP, JDBC
-drivers) are downloaded by Paper's library loader on first start, so they are
-not bundled in the plugin jar.
+<div align="center">
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for project structure and conventions.
+Released under the [MIT License](LICENSE).  ·  [Contributing](CONTRIBUTING.md)
 
-## License
-
-MIT. See [LICENSE](LICENSE).
+</div>
