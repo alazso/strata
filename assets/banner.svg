@@ -1,11 +1,11 @@
-<svg width="1280" height="640" viewBox="0 0 1280 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Strata - shared library for Paper and Folia">
+<svg width="1920" height="480" viewBox="0 0 1920 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Strata - shared library for Paper and Folia">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#0f0f0f"/>
       <stop offset="1" stop-color="#0b3d2e"/>
     </linearGradient>
-    <radialGradient id="glow" cx="30%" cy="48%" r="46%">
-      <stop offset="0" stop-color="#2f8f6f" stop-opacity="0.28"/>
+    <radialGradient id="glow" cx="50%" cy="46%" r="44%">
+      <stop offset="0" stop-color="#2f8f6f" stop-opacity="0.22"/>
       <stop offset="100%" stop-color="#2f8f6f" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="shadow" cx="50%" cy="50%" r="50%">
@@ -23,12 +23,12 @@
     </linearGradient>
   </defs>
 
-  <rect width="1280" height="640" fill="url(#bg)"/>
-  <rect width="1280" height="640" fill="url(#glow)"/>
-  <rect width="1280" height="6" fill="url(#accent)"/>
+  <rect width="1920" height="480" fill="url(#bg)"/>
+  <rect width="1920" height="480" fill="url(#glow)"/>
+  <rect width="1920" height="5" fill="url(#accent)"/>
 
-  <!-- icon: the strata stack, scaled and placed left -->
-  <g transform="translate(150,176) scale(0.6)">
+  <!-- icon: the strata stack, scaled and placed left of the wordmark -->
+  <g transform="translate(463,33) scale(0.82)">
     <ellipse cx="256" cy="432" rx="150" ry="32" fill="url(#shadow)"/>
     <polygon points="146,332 256,387 256,419 146,364" fill="#0f4836"/>
     <polygon points="366,332 256,387 256,419 366,364" fill="#0a3528"/>
@@ -42,6 +42,6 @@
   </g>
 
   <!-- wordmark + tagline -->
-  <text x="468" y="352" font-family="'Trebuchet MS','DejaVu Sans',system-ui,Arial,sans-serif" font-size="172" font-weight="800" fill="url(#word)" letter-spacing="-5">Strata</text>
-  <text x="474" y="412" font-family="'Trebuchet MS','DejaVu Sans',system-ui,Arial,sans-serif" font-size="33" font-weight="500" fill="#d7c7a1" fill-opacity="0.82" letter-spacing="0.5">Shared library for Paper, Folia, and Purpur</text>
+  <text x="812" y="272" font-family="'Trebuchet MS','DejaVu Sans',system-ui,Arial,sans-serif" font-size="158" font-weight="800" fill="url(#word)" letter-spacing="-5">Strata</text>
+  <text x="818" y="324" font-family="'Trebuchet MS','DejaVu Sans',system-ui,Arial,sans-serif" font-size="31" font-weight="500" fill="#d7c7a1" fill-opacity="0.82" letter-spacing="0.5">Shared library for Paper, Folia, and Purpur</text>
 </svg>

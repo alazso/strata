@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/banner.png" alt="Strata" width="760">
+<img src="assets/banner.png" alt="Strata" width="880">
 
 [![Build](https://img.shields.io/github/actions/workflow/status/alazso/strata/ci.yml?branch=main&style=for-the-badge&label=build)](https://github.com/alazso/strata/actions)
 [![Downloads](https://img.shields.io/modrinth/dt/strata-api?style=for-the-badge&logo=modrinth&label=downloads)](https://modrinth.com/plugin/strata-api)
