@@ -43,6 +43,7 @@ dependencies {
     compileOnly(libs.itemsadder.api) { isTransitive = false }
     compileOnly(libs.oraxen) { isTransitive = false }
     compileOnly(libs.nexo) { isTransitive = false }
+    compileOnly(libs.headdatabase.api) { isTransitive = false }
     // WorldGuard + WorldEdit, declared non-transitively so WorldGuard's strict Gson constraint never
     // enters the graph. compileOnly, so none of it is bundled.
     compileOnly(libs.worldguard.bukkit) { isTransitive = false }

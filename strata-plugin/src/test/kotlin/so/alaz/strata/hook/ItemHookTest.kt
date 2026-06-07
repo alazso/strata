@@ -17,6 +17,7 @@ class ItemHookTest {
         "ItemsAdder" to ItemsAdderItemHook(),
         "Oraxen" to OraxenItemHook(),
         "Nexo" to NexoItemHook(),
+        "HeadDatabase" to HeadDatabaseItemHook(),
     )
 
     @Test

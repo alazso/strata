@@ -31,6 +31,9 @@ dependencies:
     Nexo:
       load: BEFORE
       required: false
+    HeadDatabase:
+      load: BEFORE
+      required: false
     WorldGuard:
       load: BEFORE
       required: false

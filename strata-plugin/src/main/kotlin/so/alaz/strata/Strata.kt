@@ -19,6 +19,7 @@ import so.alaz.strata.api.storage.StorageFactory
 import so.alaz.strata.api.text.TextRenderer
 import so.alaz.strata.hook.BukkitPermissionHook
 import so.alaz.strata.hook.DefaultHookRegistry
+import so.alaz.strata.hook.HeadDatabaseItemHook
 import so.alaz.strata.hook.ItemsAdderItemHook
 import so.alaz.strata.hook.LuckPermsPermissionHook
 import so.alaz.strata.hook.NexoItemHook
@@ -53,6 +54,7 @@ class Strata : JavaPlugin(), StrataProvider {
             register(ItemHook::class.java, ItemsAdderItemHook(), 0)
             register(ItemHook::class.java, OraxenItemHook(), 0)
             register(ItemHook::class.java, NexoItemHook(), 0)
+            register(ItemHook::class.java, HeadDatabaseItemHook(), 0)
             register(RegionHook::class.java, WorldGuardRegionHook(), 0)
         }
     }
