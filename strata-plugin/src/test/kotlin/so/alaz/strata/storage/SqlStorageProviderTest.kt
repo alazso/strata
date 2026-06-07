@@ -45,6 +45,32 @@ class SqlStorageProviderTest {
     }
 
     @Test
+    fun namespaceDeterminesVersionTableName(@TempDir dir: Path) {
+        // A namespaced provider tracks its version in <namespace>_schema_version (sanitized), not the
+        // shared default, so two plugins on one database never collide.
+        val provider = SqlStorageProvider(
+            StorageConfig.sqlite(dir.resolve("ns.db").toString()).withNamespace("MyPlugin"),
+        )
+        provider.init().get()
+        try {
+            provider.migrations().migrate().get() // creates the version table
+            provider.dataSource().connection.use { conn ->
+                val tables = buildList {
+                    conn.createStatement().use { st ->
+                        st.executeQuery("SELECT name FROM sqlite_master WHERE type='table'").use { rs ->
+                            while (rs.next()) add(rs.getString(1))
+                        }
+                    }
+                }
+                assertThat(tables).contains("myplugin_schema_version")
+                assertThat(tables).doesNotContain("strata_schema_version")
+            }
+        } finally {
+            provider.shutdown().get()
+        }
+    }
+
+    @Test
     fun secondMigrationAppliesOnlyTheNewOne(@TempDir dir: Path) {
         val provider = SqlStorageProvider(StorageConfig.sqlite(dir.resolve("data2.db").toString()))
         provider.init().get()

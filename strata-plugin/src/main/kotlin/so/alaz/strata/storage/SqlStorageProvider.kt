@@ -27,7 +27,9 @@ internal class SqlStorageProvider(private val config: StorageConfig) : StoragePr
         Thread(runnable, "strata-storage-${config.poolName}").apply { isDaemon = true }
     }
 
-    private val runner = JdbcMigrationRunner(this, executor)
+    private val namespace = sanitize(config.namespace)
+
+    private val runner = JdbcMigrationRunner(this, executor, "${namespace}_schema_version")
 
     override fun backend(): Backend = config.backend
 
@@ -57,4 +59,10 @@ internal class SqlStorageProvider(private val config: StorageConfig) : StoragePr
         dataSource ?: error("StorageProvider not initialised; call init() first")
 
     override fun migrations(): MigrationRunner = runner
+
+    internal companion object {
+        /** Lowercases and reduces an identifier to `[a-z0-9_]` so it is safe to splice into DDL. */
+        fun sanitize(identifier: String): String =
+            identifier.lowercase().replace(Regex("[^a-z0-9_]"), "_").ifEmpty { "strata" }
+    }
 }

@@ -15,7 +15,18 @@ public class StorageConfig private constructor(
     public val password: String?,
     public val maxPoolSize: Int,
     public val poolName: String,
+    /**
+     * Identifier that namespaces this provider's bookkeeping (the schema-version table) so that
+     * multiple plugins pointed at the **same** database do not collide. Set it to your plugin id via
+     * [withNamespace] whenever you share a database with other Strata plugins. Defaults to `strata`.
+     */
+    public val namespace: String = "strata",
 ) {
+
+    /** Returns a copy of this config with the bookkeeping [namespace] set (e.g. your plugin id). */
+    public fun withNamespace(namespace: String): StorageConfig =
+        StorageConfig(backend, jdbcUrl, username, password, maxPoolSize, poolName, namespace)
+
     public companion object {
 
         /** File-based SQLite. Pool size is fixed at 1 (SQLite is single-writer). */
