@@ -2,10 +2,12 @@ package so.alaz.strata.api.command
 
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.builder.ArgumentBuilder
+import com.mojang.brigadier.builder.RequiredArgumentBuilder
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
+import org.bukkit.command.CommandSender
 import org.bukkit.plugin.Plugin
 import org.jetbrains.annotations.ApiStatus
 
@@ -35,6 +37,9 @@ public class StrataCommand private constructor(
 
     private var permission: String? = null
     private var executor: CommandExecutor? = null
+    private var suggestionProvider: SuggestionProvider? = null
+    private var description: String? = null
+    private var usage: String? = null
     private val children = ArrayList<StrataCommand>()
 
     /** Requires permission [permission] (and implicit op-or-permission semantics) for this node. */
@@ -43,8 +48,30 @@ public class StrataCommand private constructor(
     /** Sets the handler run when the command ends at this node. */
     public fun executes(executor: CommandExecutor): StrataCommand = apply { this.executor = executor }
 
+    /**
+     * Supplies tab-completion candidates for this argument node. Only valid on argument nodes
+     * (created with [argument]); has no effect on a literal. Candidates are filtered by the partial
+     * token before display, so a provider returns the full candidate set.
+     */
+    public fun suggests(provider: SuggestionProvider): StrataCommand = apply { this.suggestionProvider = provider }
+
+    /** A one-line description for this node, surfaced by [helpEntries]. */
+    public fun description(description: String): StrataCommand = apply { this.description = description }
+
+    /** The human-readable argument syntax for this node (e.g. `give <id> [amount]`), surfaced by [helpEntries]. */
+    public fun usage(usage: String): StrataCommand = apply { this.usage = usage }
+
     /** Adds a subcommand or argument child. */
     public fun then(child: StrataCommand): StrataCommand = apply { children.add(child) }
+
+    /**
+     * The immediate subcommands [sender] is allowed to see, for rendering a help menu. A child is
+     * included when it is a literal and either has no permission or the sender holds it.
+     */
+    public fun helpEntries(sender: CommandSender): List<HelpEntry> =
+        children
+            .filter { child -> child.literalName != null && (child.permission == null || sender.hasPermission(child.permission!!)) }
+            .map { child -> HelpEntry(child.literalName!!, child.usage, child.description) }
 
     /** Builds the Brigadier node (root must be a literal). Power-users can register it manually. */
     public fun toBrigadier(): LiteralCommandNode<CommandSourceStack> {
@@ -77,9 +104,31 @@ public class StrataCommand private constructor(
         node.executor?.let { exec ->
             builder.executes { ctx -> exec.execute(CommandContext(ctx)); Command.SINGLE_SUCCESS }
         }
+        if (node.argName != null && node.suggestionProvider != null) {
+            @Suppress("UNCHECKED_CAST")
+            val argBuilder = builder as RequiredArgumentBuilder<CommandSourceStack, *>
+            val provider = node.suggestionProvider!!
+            argBuilder.suggests { ctx, suggestions ->
+                val context = SuggestionContext(ctx, suggestions)
+                val typed = suggestions.remaining.lowercase()
+                provider.suggest(context).forEach { candidate ->
+                    if (candidate.lowercase().startsWith(typed)) {
+                        suggestions.suggest(candidate)
+                    }
+                }
+                suggestions.buildFuture()
+            }
+        }
         node.children.forEach { builder.then(build(it)) }
         return builder
     }
+
+    /** A single subcommand entry for a help listing: its [name], optional [usage] syntax, and [description]. */
+    public class HelpEntry internal constructor(
+        public val name: String,
+        public val usage: String?,
+        public val description: String?,
+    )
 
     public companion object {
         @JvmStatic public fun literal(name: String): StrataCommand = StrataCommand(name, null, null)
