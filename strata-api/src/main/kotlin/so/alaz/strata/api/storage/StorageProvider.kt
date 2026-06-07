@@ -29,4 +29,18 @@ public interface StorageProvider {
 
     /** This provider's migration runner. */
     public fun migrations(): MigrationRunner
+
+    /**
+     * A simple string key-value store named [name], backed by this provider. The table is created on
+     * first use and namespaced per provider. Repeated calls with the same [name] return the same
+     * store. Use it to persist small data without writing a schema.
+     */
+    public fun keyValue(name: String): KeyValueStore
+
+    /**
+     * A per-player key-value store named [name], backed by this provider. The table is created on
+     * first use and namespaced per provider. Repeated calls with the same [name] return the same
+     * store.
+     */
+    public fun playerData(name: String): PlayerDataStore
 }

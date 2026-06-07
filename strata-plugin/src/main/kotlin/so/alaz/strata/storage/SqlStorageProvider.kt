@@ -3,12 +3,15 @@ package so.alaz.strata.storage
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import so.alaz.strata.api.storage.Backend
+import so.alaz.strata.api.storage.KeyValueStore
 import so.alaz.strata.api.storage.MigrationRunner
+import so.alaz.strata.api.storage.PlayerDataStore
 import so.alaz.strata.api.storage.StorageConfig
 import so.alaz.strata.api.storage.StorageProvider
 import so.alaz.strata.api.storage.StrataExposed
 import java.io.File
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import javax.sql.DataSource
@@ -30,6 +33,9 @@ internal class SqlStorageProvider(private val config: StorageConfig) : StoragePr
     private val namespace = sanitize(config.namespace)
 
     private val runner = JdbcMigrationRunner(this, executor, "${namespace}_schema_version")
+
+    private val kvStores = ConcurrentHashMap<String, KeyValueStore>()
+    private val pdStores = ConcurrentHashMap<String, PlayerDataStore>()
 
     override fun backend(): Backend = config.backend
 
@@ -59,6 +65,12 @@ internal class SqlStorageProvider(private val config: StorageConfig) : StoragePr
         dataSource ?: error("StorageProvider not initialised; call init() first")
 
     override fun migrations(): MigrationRunner = runner
+
+    override fun keyValue(name: String): KeyValueStore =
+        kvStores.computeIfAbsent(name) { JdbcKeyValueStore(this, executor, "${namespace}_kv_${sanitize(it)}") }
+
+    override fun playerData(name: String): PlayerDataStore =
+        pdStores.computeIfAbsent(name) { JdbcPlayerDataStore(this, executor, "${namespace}_pd_${sanitize(it)}") }
 
     internal companion object {
         /** Lowercases and reduces an identifier to `[a-z0-9_]` so it is safe to splice into DDL. */
