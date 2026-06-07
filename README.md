@@ -15,11 +15,7 @@
 
 <br>
 
-> ⚠️ &nbsp; **Strata is a shared library, not a standalone plugin.** Install it once on the server (like Vault or LuckPerms) because a plugin depends on it; on its own it does nothing. It is currently under review on Modrinth, so for now grab it from [GitHub releases](https://github.com/alazso/strata/releases).
-
-<br>
-
-One tested set of building blocks for a whole plugin ecosystem: scheduling, storage, integrations, conditions, text, and more. Install Strata once and every plugin built on it shares the same connection pool, integration registry, and runtime libraries instead of each shipping its own.
+> ⚠️ **Strata is a shared library, not a standalone plugin.** Install it once on the server (like Vault or LuckPerms) because a plugin depends on it; on its own it does nothing. It is currently under review on Modrinth, so for now grab it from [GitHub releases](https://github.com/alazso/strata/releases).
 
 <br>
 
