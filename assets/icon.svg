@@ -1,0 +1,37 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Strata">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f0f0f"/>
+      <stop offset="1" stop-color="#0b3d2e"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="44%" r="52%">
+      <stop offset="0" stop-color="#2f8f6f" stop-opacity="0.40"/>
+      <stop offset="100%" stop-color="#2f8f6f" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="shadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="112" fill="url(#glow)"/>
+
+  <!-- ground shadow -->
+  <ellipse cx="256" cy="432" rx="150" ry="32" fill="url(#shadow)"/>
+
+  <!-- bottom layer : deep green -->
+  <polygon points="146,332 256,387 256,419 146,364" fill="#0f4836"/>
+  <polygon points="366,332 256,387 256,419 366,364" fill="#0a3528"/>
+  <polygon points="256,277 366,332 256,387 146,332" fill="#145a43"/>
+
+  <!-- middle layer : sand -->
+  <polygon points="146,236 256,291 256,323 146,268" fill="#c0b189"/>
+  <polygon points="366,236 256,291 256,323 366,268" fill="#a8996f"/>
+  <polygon points="256,181 366,236 256,291 146,236" fill="#d7c7a1"/>
+
+  <!-- top layer : emerald -->
+  <polygon points="146,140 256,195 256,227 146,172" fill="#25775c"/>
+  <polygon points="366,140 256,195 256,227 366,172" fill="#1c5e48"/>
+  <polygon points="256,85 366,140 256,195 146,140" fill="#2f8f6f"/>
+</svg>

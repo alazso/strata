@@ -1,0 +1,47 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Strata - shared library for Paper and Folia">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f0f0f"/>
+      <stop offset="1" stop-color="#0b3d2e"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="30%" cy="48%" r="46%">
+      <stop offset="0" stop-color="#2f8f6f" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#2f8f6f" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="shadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2f8f6f"/>
+      <stop offset="0.5" stop-color="#d7c7a1"/>
+      <stop offset="1" stop-color="#2f8f6f"/>
+    </linearGradient>
+    <linearGradient id="word" x1="0" y1="0" x2="1" y2="0.35">
+      <stop offset="0" stop-color="#3aa07f"/>
+      <stop offset="1" stop-color="#d7c7a1"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect width="1280" height="640" fill="url(#glow)"/>
+  <rect width="1280" height="6" fill="url(#accent)"/>
+
+  <!-- icon: the strata stack, scaled and placed left -->
+  <g transform="translate(150,176) scale(0.6)">
+    <ellipse cx="256" cy="432" rx="150" ry="32" fill="url(#shadow)"/>
+    <polygon points="146,332 256,387 256,419 146,364" fill="#0f4836"/>
+    <polygon points="366,332 256,387 256,419 366,364" fill="#0a3528"/>
+    <polygon points="256,277 366,332 256,387 146,332" fill="#145a43"/>
+    <polygon points="146,236 256,291 256,323 146,268" fill="#c0b189"/>
+    <polygon points="366,236 256,291 256,323 366,268" fill="#a8996f"/>
+    <polygon points="256,181 366,236 256,291 146,236" fill="#d7c7a1"/>
+    <polygon points="146,140 256,195 256,227 146,172" fill="#25775c"/>
+    <polygon points="366,140 256,195 256,227 366,172" fill="#1c5e48"/>
+    <polygon points="256,85 366,140 256,195 146,140" fill="#2f8f6f"/>
+  </g>
+
+  <!-- wordmark + tagline -->
+  <text x="468" y="352" font-family="'Trebuchet MS','DejaVu Sans',system-ui,Arial,sans-serif" font-size="172" font-weight="800" fill="url(#word)" letter-spacing="-5">Strata</text>
+  <text x="474" y="412" font-family="'Trebuchet MS','DejaVu Sans',system-ui,Arial,sans-serif" font-size="33" font-weight="500" fill="#d7c7a1" fill-opacity="0.82" letter-spacing="0.5">Shared library for Paper, Folia, and Purpur</text>
+</svg>
