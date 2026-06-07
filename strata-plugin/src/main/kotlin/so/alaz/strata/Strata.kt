@@ -14,6 +14,7 @@ import so.alaz.strata.api.hook.ItemHook
 import so.alaz.strata.api.hook.PermissionHook
 import so.alaz.strata.api.hook.RegionHook
 import so.alaz.strata.api.metrics.MetricsService
+import so.alaz.strata.api.player.PlayerLookup
 import so.alaz.strata.api.scheduler.PlatformScheduler
 import so.alaz.strata.api.storage.StorageFactory
 import so.alaz.strata.api.text.TextRenderer
@@ -30,6 +31,7 @@ import so.alaz.strata.condition.DefaultConditionRegistry
 import so.alaz.strata.gui.DefaultGuiManager
 import so.alaz.strata.gui.GuiListener
 import so.alaz.strata.metrics.DefaultMetricsService
+import so.alaz.strata.player.DefaultPlayerLookup
 import so.alaz.strata.scheduler.FoliaPlatformScheduler
 import so.alaz.strata.storage.DefaultStorageFactory
 import so.alaz.strata.text.MiniMessageTextRenderer
@@ -63,6 +65,7 @@ class Strata : JavaPlugin(), StrataProvider {
         DefaultConditionRegistry(hookRegistry, textRenderer)
     }
     private val guiManager: DefaultGuiManager by lazy { DefaultGuiManager(this) }
+    private val playerLookup: DefaultPlayerLookup by lazy { DefaultPlayerLookup() }
 
     override fun onEnable() {
         instance = this
@@ -70,6 +73,7 @@ class Strata : JavaPlugin(), StrataProvider {
         StrataApi.register(this)
         applyHookPreferences()
         server.pluginManager.registerEvents(GuiListener(guiManager), this)
+        server.pluginManager.registerEvents(playerLookup, this)
         registerStrataCommand()
         logger.info("Strata enabled (API ${StrataApi.VERSION}).")
     }
@@ -118,6 +122,8 @@ class Strata : JavaPlugin(), StrataProvider {
     override fun conditions(): ConditionRegistry = conditionRegistry
 
     override fun gui(): GuiManager = guiManager
+
+    override fun players(): PlayerLookup = playerLookup
 
     companion object {
         @JvmStatic

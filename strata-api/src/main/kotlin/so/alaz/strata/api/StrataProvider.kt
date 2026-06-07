@@ -6,6 +6,7 @@ import so.alaz.strata.api.condition.ConditionRegistry
 import so.alaz.strata.api.gui.GuiManager
 import so.alaz.strata.api.hook.HookRegistry
 import so.alaz.strata.api.metrics.MetricsService
+import so.alaz.strata.api.player.PlayerLookup
 import so.alaz.strata.api.scheduler.PlatformScheduler
 import so.alaz.strata.api.storage.StorageFactory
 import so.alaz.strata.api.text.TextRenderer
@@ -37,4 +38,7 @@ public interface StrataProvider {
 
     /** The GUI manager (holder-based chest menus). */
     public fun gui(): GuiManager
+
+    /** The shared player name/UUID lookup. */
+    public fun players(): PlayerLookup
 }

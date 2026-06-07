@@ -6,6 +6,7 @@ import so.alaz.strata.api.condition.ConditionRegistry
 import so.alaz.strata.api.gui.GuiManager
 import so.alaz.strata.api.hook.HookRegistry
 import so.alaz.strata.api.metrics.MetricsService
+import so.alaz.strata.api.player.PlayerLookup
 import so.alaz.strata.api.scheduler.PlatformScheduler
 import so.alaz.strata.api.storage.StorageFactory
 import so.alaz.strata.api.text.TextRenderer
@@ -60,6 +61,10 @@ public object StrataApi {
     /** The [GuiManager] for opening holder-based chest menus. */
     @JvmStatic
     public fun gui(): GuiManager = require().gui()
+
+    /** The shared [PlayerLookup] for resolving player names and UUIDs. */
+    @JvmStatic
+    public fun players(): PlayerLookup = require().players()
 
     private fun require(): StrataProvider = provider ?: error(
         "Strata is not enabled yet. Declare a hard 'Strata' dependency (load: BEFORE) in paper-plugin.yml.",
