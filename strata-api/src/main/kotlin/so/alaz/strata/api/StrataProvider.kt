@@ -7,6 +7,7 @@ import so.alaz.strata.api.gui.GuiManager
 import so.alaz.strata.api.hook.HookRegistry
 import so.alaz.strata.api.message.MessageService
 import so.alaz.strata.api.metrics.MetricsService
+import so.alaz.strata.api.placeholder.PlaceholderRegistration
 import so.alaz.strata.api.player.PlayerLookup
 import so.alaz.strata.api.scheduler.PlatformScheduler
 import so.alaz.strata.api.storage.StorageFactory
@@ -45,4 +46,7 @@ public interface StrataProvider {
 
     /** The message catalog bound to [plugin] (cached per plugin). */
     public fun messages(plugin: Plugin): MessageService
+
+    /** A fresh placeholder registration for [plugin] (exposes placeholders to PAPI + MiniPlaceholders). */
+    public fun placeholders(plugin: Plugin): PlaceholderRegistration
 }

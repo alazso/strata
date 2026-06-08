@@ -7,6 +7,7 @@ import so.alaz.strata.api.gui.GuiManager
 import so.alaz.strata.api.hook.HookRegistry
 import so.alaz.strata.api.message.MessageService
 import so.alaz.strata.api.metrics.MetricsService
+import so.alaz.strata.api.placeholder.PlaceholderRegistration
 import so.alaz.strata.api.player.PlayerLookup
 import so.alaz.strata.api.scheduler.PlatformScheduler
 import so.alaz.strata.api.storage.StorageFactory
@@ -70,6 +71,10 @@ public object StrataApi {
     /** The [MessageService] (keyed, localized messages) bound to [plugin]; cached per plugin. */
     @JvmStatic
     public fun messages(plugin: Plugin): MessageService = require().messages(plugin)
+
+    /** A fresh [PlaceholderRegistration] to expose [plugin]'s placeholders to PAPI + MiniPlaceholders. */
+    @JvmStatic
+    public fun placeholders(plugin: Plugin): PlaceholderRegistration = require().placeholders(plugin)
 
     private fun require(): StrataProvider = provider ?: error(
         "Strata is not enabled yet. Declare a hard 'Strata' dependency (load: BEFORE) in paper-plugin.yml.",
