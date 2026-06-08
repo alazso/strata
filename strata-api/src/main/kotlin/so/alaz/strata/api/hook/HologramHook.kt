@@ -3,9 +3,10 @@ package so.alaz.strata.api.hook
 import org.bukkit.Location
 
 /**
- * Hologram management behind one interface (DecentHolograms, FancyHolograms, CMI, etc.).
- * Holograms are addressed by a caller-chosen `id`. Line strings are rendered per the provider's
- * own formatting; pass already-rendered text where the provider expects it.
+ * Hologram management behind one interface (FancyHolograms, etc.). Holograms are addressed by a
+ * caller-chosen `id`. Line strings are **MiniMessage**: each provider renders them to its backend
+ * (MiniMessage-native providers pass them through; legacy providers convert), so a caller passes the
+ * same format regardless of which provider is installed.
  */
 public interface HologramHook : Hook {
 
