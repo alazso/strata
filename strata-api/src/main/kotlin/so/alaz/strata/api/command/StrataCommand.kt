@@ -10,6 +10,7 @@ import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.Plugin
 import org.jetbrains.annotations.ApiStatus
+import java.util.Locale
 
 /**
  * Fluent builder for a Brigadier command tree, hiding the Brigadier/Mojang generics. Build a literal
@@ -110,9 +111,9 @@ public class StrataCommand private constructor(
             val provider = node.suggestionProvider!!
             argBuilder.suggests { ctx, suggestions ->
                 val context = SuggestionContext(ctx, suggestions)
-                val typed = suggestions.remaining.lowercase()
+                val typed = suggestions.remaining.lowercase(Locale.ROOT)
                 provider.suggest(context).forEach { candidate ->
-                    if (candidate.lowercase().startsWith(typed)) {
+                    if (candidate.lowercase(Locale.ROOT).startsWith(typed)) {
                         suggestions.suggest(candidate)
                     }
                 }
