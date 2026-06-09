@@ -6,6 +6,7 @@
 [![Downloads](https://img.shields.io/modrinth/dt/strata-api?style=for-the-badge&logo=modrinth&label=downloads)](https://modrinth.com/plugin/strata-api)
 [![Minecraft](https://img.shields.io/badge/Paper%20·%20Folia%20·%20Purpur-26.1%2B-2b2d31?style=for-the-badge)](https://papermc.io/)
 [![License](https://img.shields.io/github/license/alazso/strata?style=for-the-badge&label=license)](LICENSE)
+[![Discord](https://img.shields.io/discord/1510890328943628350?style=for-the-badge&logo=discord&logoColor=white&label=discord&color=5865F2)](https://discord.gg/m3AKQfrMS5)
 
 **[📖 Documentation](https://alaz.so/strata/docs)**  ·  **[💻 Source](https://github.com/alazso/strata)**
 
