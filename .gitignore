@@ -1,3 +1,6 @@
+# Secrets
+.plane.env
+
 # Gradle
 .gradle/
 .kotlin/
