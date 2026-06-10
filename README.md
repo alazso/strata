@@ -5,7 +5,7 @@
 [![Build](https://img.shields.io/github/actions/workflow/status/alazso/strata/ci.yml?branch=main&style=for-the-badge&label=build)](https://github.com/alazso/strata/actions)
 [![Downloads](https://img.shields.io/modrinth/dt/strata-api?style=for-the-badge&logo=modrinth&label=downloads)](https://modrinth.com/plugin/strata-api)
 [![Minecraft](https://img.shields.io/badge/Paper%20·%20Folia%20·%20Purpur-26.1%2B-2b2d31?style=for-the-badge)](https://papermc.io/)
-[![License](https://img.shields.io/github/license/alazso/strata?style=for-the-badge&label=license)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-2b2d31?style=for-the-badge)](LICENSE)
 [![Discord](https://img.shields.io/discord/1510890328943628350?style=for-the-badge&logo=discord&logoColor=white&label=discord&color=5865F2)](https://discord.gg/m3AKQfrMS5)
 
 [![Documentation](https://img.shields.io/badge/Documentation-2f8f6f?style=for-the-badge&logo=readthedocs&logoColor=white)](https://alaz.so/strata/docs)
