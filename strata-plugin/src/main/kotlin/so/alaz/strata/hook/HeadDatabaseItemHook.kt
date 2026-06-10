@@ -8,8 +8,9 @@ import so.alaz.strata.api.hook.ItemHook
 /**
  * Head Database (Arcaniax) as an [ItemHook]: its `getItemHead(id)` returns a finished head
  * [ItemStack], which is exactly the [createItem] contract, so HDB heads flow through the same
- * custom-item path as ItemsAdder/Oraxen/Nexo. Ids are HDB's numeric ids, optionally prefixed
- * `hdb:` or `headdatabase:` so a stored id round-trips unambiguously back to this provider.
+ * custom-item path as ItemsAdder/Oraxen/Nexo. [itemId] returns HDB's bare numeric id (consistent
+ * with the other providers, which return their own native ids unprefixed); [createItem] still
+ * accepts an optional `hdb:`/`headdatabase:` prefix so an explicitly-qualified id routes here.
  *
  * No HDB-typed fields exist (only a `present` flag); all HDB references live in wrapped method
  * bodies, so the class loads when HDB is absent and every lookup degrades to `null`/`false`. Heads
@@ -27,7 +28,7 @@ internal class HeadDatabaseItemHook : ItemHook {
         present && runCatching { Bukkit.getPluginManager().isPluginEnabled("HeadDatabase") }.getOrDefault(false)
 
     override fun itemId(item: ItemStack): String? =
-        runCatching { HeadDatabaseAPI().getItemID(item)?.let { "hdb:$it" } }.getOrNull()
+        runCatching { HeadDatabaseAPI().getItemID(item) }.getOrNull()
 
     override fun createItem(id: String): ItemStack? =
         runCatching {

@@ -53,6 +53,18 @@ public object SkullBuilder {
     public fun fromUrl(url: String): ItemStack = fromTexture(base64FromUrl(url))
 
     /**
+     * The inverse of [fromTexture]: the base64 `textures` value carried by [item], or `null` when
+     * [item] is not a player head or has no texture profile. Use this to read a head's texture back
+     * out (the fiddly Paper-profile bit) so you can persist or compare it.
+     */
+    @JvmStatic
+    public fun textureOf(item: ItemStack): String? {
+        val meta = item.itemMeta as? SkullMeta ?: return null
+        val profile = meta.playerProfile ?: return null
+        return textureValue(profile)
+    }
+
+    /**
      * A head for [name]'s current skin, resolved from Mojang off-thread and cached. Completes with a
      * blank head if the name cannot be resolved.
      */
