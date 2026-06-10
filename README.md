@@ -8,7 +8,8 @@
 [![License](https://img.shields.io/github/license/alazso/strata?style=for-the-badge&label=license)](LICENSE)
 [![Discord](https://img.shields.io/discord/1510890328943628350?style=for-the-badge&logo=discord&logoColor=white&label=discord&color=5865F2)](https://discord.gg/m3AKQfrMS5)
 
-**[📖 Documentation](https://alaz.so/strata/docs)**  ·  **[💻 Source](https://github.com/alazso/strata)**
+[![Documentation](https://img.shields.io/badge/Documentation-2f8f6f?style=for-the-badge&logo=readthedocs&logoColor=white)](https://alaz.so/strata/docs)
+[![Source](https://img.shields.io/badge/Source-0f0f0f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/alazso/strata)
 
 </div>
 
