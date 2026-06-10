@@ -6,16 +6,16 @@
 [![Downloads](https://img.shields.io/modrinth/dt/strata-api?style=for-the-badge&logo=modrinth&label=downloads)](https://modrinth.com/plugin/strata-api)
 [![Minecraft](https://img.shields.io/badge/Paper%20·%20Folia%20·%20Purpur-26.1%2B-2b2d31?style=for-the-badge)](https://papermc.io/)
 [![License](https://img.shields.io/badge/license-MIT-2b2d31?style=for-the-badge)](LICENSE)
-[![Discord](https://img.shields.io/discord/1510890328943628350?style=for-the-badge&logo=discord&logoColor=white&label=discord&color=5865F2)](https://discord.gg/m3AKQfrMS5)
 
 [![Documentation](https://img.shields.io/badge/Documentation-2f8f6f?style=for-the-badge&logo=readthedocs&logoColor=white)](https://alaz.so/strata/docs)
 [![Source](https://img.shields.io/badge/Source-0f0f0f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/alazso/strata)
+[![Support Discord](https://img.shields.io/discord/1510890328943628350?style=for-the-badge&logo=discord&logoColor=white&label=discord&color=5865F2)](https://discord.gg/m3AKQfrMS5)
 
 </div>
 
 <br>
 
-> ⚠️ **Strata is a shared library, not a standalone plugin.** Install it once on the server (like Vault or LuckPerms) because a plugin depends on it; on its own it does nothing. It is currently under review on Modrinth, so for now grab it from [GitHub releases](https://github.com/alazso/strata/releases).
+> ⚠️ **Strata is a shared library, not a standalone plugin.** Currently only one plugin natively depends on it: [ProVouchers](https://modrinth.com/plugin/provouchers). Strata is currently under review on Modrinth, so for now grab it from [GitHub releases](https://github.com/alazso/strata/releases).
 
 <br>
 
